@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Word Quest Kids Learning Game</title>
+    <title>Word Quest: Cognitive Brain Trainer</title>
     <style>
         :root {
-            --primary: #4ade80;
-            --primary-dark: #16a34a;
-            --bg: #f0fdf4;
-            --card-border: #bbf7d0;
+            --primary: #a855f7;
+            --primary-dark: #6b21a8;
+            --bg: #faf5ff;
+            --card-border: #f3e8ff;
         }
 
         body {
-            font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg);
             margin: 0;
             padding: 15px;
@@ -29,12 +29,12 @@
         .game-container {
             background: white;
             border: 4px solid var(--card-border);
-            border-radius: 32px;
+            border-radius: 28px;
             padding: 25px;
             width: 100%;
             max-width: 440px;
             text-align: center;
-            box-shadow: 0 12px 0px #dcfce7;
+            box-shadow: 0 12px 24px rgba(107, 33, 168, 0.08);
             position: relative;
             z-index: 10;
         }
@@ -43,17 +43,41 @@
             color: var(--primary-dark);
             font-size: 2.2rem;
             margin: 0 0 5px 0;
-            text-shadow: 2px 2px 0px #dcfce7;
+        }
+
+        .voice-selector-box {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        label {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #6b7280;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 12px;
+            border: 2px solid #e9d5ff;
+            background: white;
+            font-size: 0.95rem;
+            color: #4c1d95;
+            outline: none;
+            cursor: pointer;
         }
 
         .score-board {
             display: flex;
             justify-content: space-around;
-            background: #f8fafc;
+            background: #faf5ff;
             padding: 10px;
             border-radius: 16px;
             margin-bottom: 20px;
-            border: 2px solid #e2e8f0;
+            border: 2px solid #f3e8ff;
             font-size: 1.1rem;
             font-weight: bold;
         }
@@ -62,7 +86,7 @@
         .score { color: #2563eb; }
 
         .audio-box {
-            background: #f0fdf4;
+            background: #fdf4ff;
             border: 3px dashed var(--primary);
             border-radius: 20px;
             padding: 20px;
@@ -80,16 +104,17 @@
         }
 
         .btn-speak {
-            background: #4ade80;
+            background: #a855f7;
             color: white;
-            box-shadow: 0 5px 0px #16a34a;
+            box-shadow: 0 5px 0px #7e22ce;
             margin-bottom: 10px;
+            width: 100%;
         }
 
-        .btn-speak:active { transform: translateY(4px); box-shadow: 0 1px 0px #16a34a; }
+        .btn-speak:active { transform: translateY(4px); box-shadow: 0 1px 0px #7e22ce; }
 
         .btn-hint {
-            background: #cbd5e1;
+            background: #e2e8f0;
             color: #334155;
             font-size: 0.9rem;
             padding: 6px 12px;
@@ -101,7 +126,7 @@
             padding: 12px;
             font-size: 1.5rem;
             text-align: center;
-            border: 3px solid #cbd5e1;
+            border: 3px solid #e2e8f0;
             border-radius: 16px;
             text-transform: uppercase;
             box-sizing: border-box;
@@ -111,7 +136,7 @@
 
         .btn-check {
             width: 100%;
-            background: #3b82f6;
+            background: #2563eb;
             color: white;
             box-shadow: 0 5px 0px #1d4ed8;
             margin-top: 10px;
@@ -124,18 +149,26 @@
         .correct { color: #16a34a; animation: bounce 0.4s ease; }
         .wrong { color: #dc2626; animation: shake 0.4s ease; }
 
-        @keyframes bounce { 50% { transform: scale(1.15); } }
+        @keyframes bounce { 50% { transform: scale(1.05); } }
         @keyframes shake { 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
     </style>
 </head>
 <body>
 
-    <!-- Confetti layer rendering box -->
     <canvas id="confetti" style="position:fixed; top:0; left:0; width:100vw; height:100vh; pointer-events:none; z-index:999;"></canvas>
 
     <div class="game-container">
-        <h1>✏️ Word Quest! 🌟</h1>
-        <p style="color: #64748b; margin-top: 5px; margin-bottom: 15px;">Listen, type, and learn!</p>
+        <h1>🧠 Word Quest Pro</h1>
+        <p style="color: #6b7280; margin-top: 5px; margin-bottom: 15px;">Cognitive Brain Exercise Mode</p>
+
+        <!-- Voice Accent Configuration Component -->
+        <div class="voice-selector-box">
+            <label for="voice-select">🗣️ Select Speaker Accent:</label>
+            <select id="voice-select">
+                <option value="en-US">American English</option>
+                <option value="en-GB">British English</option>
+            </select>
+        </div>
 
         <div class="score-board">
             <span class="score">⭐ Score: <span id="score-val">0</span></span>
@@ -143,40 +176,35 @@
         </div>
 
         <div class="audio-box">
-            <button class="btn btn-speak" id="listen-btn">🔊 Hear Word</button>
+            <button class="btn btn-speak" id="listen-btn">🔊 Listen to Word</button>
             <br>
             <button class="btn btn-hint" id="hint-btn">Help me spell</button>
         </div>
 
         <div class="input-zone">
             <input type="text" id="user-input" placeholder="TYPE HERE..." autocomplete="off">
-            <button class="btn btn-check" id="check-btn">Check Answer! 👍</button>
+            <button class="btn btn-check" id="check-btn">Verify Answer</button>
         </div>
 
         <div class="feedback" id="feedback-msg"></div>
     </div>
 
     <script>
-        const baseWords = [
-            "cat", "dog", "lion", "frog", "duck", "fish", "bird", "bear", "deer", "wolf",
-            "apple", "banana", "grape", "orange", "melon", "peach", "plum", "berry", "pear", "mango",
-            "red", "blue", "green", "pink", "black", "white", "brown", "gold", "gray", "yellow",
-            "book", "desk", "pen", "page", "rule", "math", "read", "draw", "song", "play",
-            "home", "room", "door", "yard", "roof", "wall", "bed", "lamp", "chair", "sofa",
-            "sun", "moon", "star", "rain", "snow", "wind", "cloud", "sky", "tree", "leaf",
-            "happy", "smile", "laugh", "brave", "kind", "smart", "sweet", "bright", "tall", "fast",
-            "jump", "run", "walk", "skip", "hop", "swim", "fly", "climb", "slide", "swing",
-            "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
-            "baby", "child", "sister", "brother", "mother", "father", "friend", "family", "team", "ball"
+        // High-entropy vocabulary dataset curated for neurological cognitive stimulation
+        const brainExerciseWords = [
+            "paradox", "quantum", "matrix", "horizon", "velocity", "spectrum", "symmetry", "illusion",
+            "catalyst", "synergy", "dynamic", "abstract", "harmonic", "infinite", "graphene", "traverse",
+            "acoustic", "kinetic", "resonance", "alchemy", "vortex", "nebula", "protocol", "cerebral",
+            "monolith", "synthetic", "frequency", "bionic", "algorithm", "entropy", "eclipse", "optics"
         ];
 
-        // Expands into a massive 1000 random-access slot array configuration
         const wordPool = [];
-        for (let i = 0; i < 10; i++) { baseWords.forEach(w => wordPool.push(w)); }
+        for (let i = 0; i < 30; i++) { brainExerciseWords.forEach(w => wordPool.push(w)); }
 
         let currentWord = "";
         let score = 0;
         let streak = 0;
+        let browserVoices = [];
 
         const listenBtn = document.getElementById('listen-btn');
         const hintBtn = document.getElementById('hint-btn');
@@ -185,6 +213,19 @@
         const feedbackMsg = document.getElementById('feedback-msg');
         const scoreVal = document.getElementById('score-val');
         const streakVal = document.getElementById('streak-val');
+        const voiceSelect = document.getElementById('voice-select');
+
+        // Dynamically parse system speech voice objects
+        function loadSystemVoices() {
+            if ('speechSynthesis' in window) {
+                browserVoices = window.speechSynthesis.getVoices();
+            }
+        }
+        
+        loadSystemVoices();
+        if (window.speechSynthesis && window.speechSynthesis.onvoiceschanged !== undefined) {
+            window.speechSynthesis.onvoiceschanged = loadSystemVoices;
+        }
 
         function nextWord() {
             currentWord = wordPool[Math.floor(Math.random() * wordPool.length)];
@@ -198,7 +239,16 @@
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
                 const utterance = new SpeechSynthesisUtterance(text);
-                utterance.rate = 0.8; utterance.pitch = 1.2;
+                
+                // Fetch target accent code configured via the dropdown selection
+                const targetLang = voiceSelect.value;
+                utterance.lang = targetLang;
+                
+                // Matches exact regional system voice profile signatures
+                const matchedVoice = browserVoices.find(v => v.lang.startsWith(targetLang));
+                if (matchedVoice) utterance.voice = matchedVoice;
+
+                utterance.rate = 0.85;
                 window.speechSynthesis.speak(utterance);
             }
         }
@@ -208,19 +258,19 @@
             if (!playerGuess) return;
 
             if (playerGuess === currentWord.toLowerCase()) {
-                score += 10; streak += 1;
+                score += 20; streak += 1;
                 scoreVal.textContent = score; streakVal.textContent = streak;
-                feedbackMsg.textContent = "🎉 Excellent! Correct!";
+                feedbackMsg.textContent = "🎯 Target Identified! Correct!";
                 feedbackMsg.className = "feedback correct";
                 
-                burstConfetti(); // Fire new animation effect
-                triggerSpeech("Correct! Great job!");
-                setTimeout(nextWord, 2000);
+                burstConfetti();
+                triggerSpeech("Correct");
+                setTimeout(nextWord, 1800);
             } else {
                 streak = 0; streakVal.textContent = streak;
-                feedbackMsg.textContent = "❌ Not quite! Try again!";
+                feedbackMsg.textContent = "⚡ Error: Recalibrating!";
                 feedbackMsg.className = "feedback wrong";
-                triggerSpeech("Try again!");
+                triggerSpeech("Incorrect");
             }
         }
 
@@ -228,43 +278,12 @@
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
                 const spelling = currentWord.split('').join('... ');
-                const utterance = new SpeechSynthesisUtterance(`It is spelled... ${spelling}`);
-                utterance.rate = 0.7; utterance.pitch = 1.2;
+                const utterance = new SpeechSynthesisUtterance(`Spelling... ${spelling}`);
+                utterance.lang = voiceSelect.value;
+                utterance.rate = 0.75;
                 window.speechSynthesis.speak(utterance);
             }
         });
 
-        listenBtn.addEventListener('click', () => triggerSpeech(currentWord));
-        checkBtn.addEventListener('click', checkAnswer);
-        userInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') checkAnswer(); });
 
-        // CONFETTI GRAPHICS ENGINE
-        const cvs = document.getElementById('confetti');
-        const ctx = cvs.getContext('2d');
-        let parts = [];
-        function resize() { cvs.width = window.innerWidth; cvs.height = window.innerHeight; }
-        window.addEventListener('resize', resize); resize();
-
-        function burstConfetti() {
-            parts = [];
-            for (let i = 0; i < 70; i++) {
-                parts.push({
-                    x: cvs.width / 2, y: cvs.height / 3,
-                    color: `hsl(${Math.random() * 360}, 100%, 50%)`,
-                    radius: Math.random() * 5 + 4,
-                    vx: (Math.random() - 0.5) * 14, vy: (Math.random() - 0.7) * 14,
-                    alpha: 1
-                });
-            }
-            anim();
-        }
-
-        function anim() {
-            if (parts.length === 0) return;
-            ctx.clearRect(0, 0, cvs.width, cvs.height);
-            parts.forEach((p, idx) => {
-                p.x += p.vx; p.y += p.vy; p.vy += 0.25; p.alpha -= 0.015;
-                ctx.save(); ctx.globalAlpha = p.alpha; ctx.fillStyle = p.color;
-                ctx.beginPath(); ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                ctx.fill(); ctx.restore();
 
