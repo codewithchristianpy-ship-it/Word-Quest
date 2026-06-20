@@ -1,186 +1,198 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kids Interactive Learning Board</title>
-    <style>
-        :root {
-            --bg-color: #f0fdf4;
-            --title-color: #15803d;
-        }
-
-        body {
-            font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
-            background-color: var(--bg-color);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            box-sizing: border-box;
-        }
-
-        h1 {
-            color: var(--title-color);
-            font-size: 2.5rem;
-            margin-bottom: 5px;
-            text-shadow: 2px 2px 0px #bbf7d0;
-            text-align: center;
-        }
-
-        .subtitle {
-            font-size: 1.2rem;
-            color: #166534;
-            margin-top: 0;
-            margin-bottom: 2rem;
-            text-align: center;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 20px;
-            width: 100%;
-            max-width: 600px;
-        }
-
-        .card {
-            background: white;
-            border: 4px solid #bbf7d0;
-            border-radius: 24px;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            box-shadow: 0 8px 0px #dcfce7;
-            transition: all 0.1s ease;
-            user-select: none;
-        }
-
-        .card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 0px #dcfce7;
-            border-color: #4ade80;
-        }
-
-        .card:active {
-            transform: translateY(6px);
-            box-shadow: 0 2px 0px #dcfce7;
-        }
-
-        .emoji {
-            font-size: 4rem;
-            margin: 0;
-            display: block;
-        }
-
-        .label {
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: #1e3a1e;
-            margin-top: 10px;
-            display: block;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        /* Displays the spelled-out word at the top when clicked */
-        .display-box {
-            background: #ffffff;
-            border: 3px dashed #4ade80;
-            padding: 15px 30px;
-            border-radius: 50px;
-            font-size: 2rem;
-            font-weight: bold;
-            color: #15803d;
-            margin-bottom: 2rem;
-            min-height: 45px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kids Interactive Learning Board</title>
+  <style>
+    :root {
+      --bg-color: #f0fdf4;
+      --title-color: #15803d;
+    }
+    body {
+      font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+      background-color: var(--bg-color);
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+    h1 {
+      color: var(--title-color);
+      font-size: 2.5rem;
+      margin-bottom: 5px;
+      text-shadow: 2px 2px 0px #bbf7d0;
+      text-align: center;
+    }
+    .subtitle {
+      font-size: 1.2rem;
+      color: #166534;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 20px;
+      width: 100%;
+      max-width: 600px;
+    }
+    .card {
+      background: white;
+      border: 4px solid #bbf7d0;
+      border-radius: 24px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: 0 8px 0px #dcfce7;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+    .card:hover {
+      transform: translateY(-4px) scale(1.05);
+      box-shadow: 0 12px 0px #dcfce7;
+      border-color: #4ade80;
+    }
+    .emoji {
+      font-size: 4rem;
+      margin: 0;
+    }
+    .label {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #1e3a1e;
+      margin-top: 10px;
+      text-transform: uppercase;
+    }
+    .display-box {
+      background: #ffffff;
+      border: 3px dashed #4ade80;
+      padding: 15px 30px;
+      border-radius: 50px;
+      font-size: 2rem;
+      font-weight: bold;
+      color: #15803d;
+      margin-bottom: 2rem;
+      min-height: 45px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .stars {
+      font-size: 2rem;
+      color: gold;
+      margin-bottom: 1rem;
+    }
+    .quiz-box {
+      margin-top: 20px;
+      text-align: center;
+    }
+    .quiz-option {
+      background: #dcfce7;
+      border: 2px solid #4ade80;
+      border-radius: 12px;
+      padding: 10px;
+      margin: 5px;
+      cursor: pointer;
+      display: inline-block;
+    }
+    .quiz-option:hover {
+      background: #bbf7d0;
+    }
+  </style>
 </head>
 <body>
 
-    <h1>✨ Kids Learning Board ✨</h1>
-    <p class="subtitle">Tap an animal to hear its name and learn to spell!</p>
+  <h1>✨ Kids Learning Board ✨</h1>
+  <p class="subtitle">Tap an animal to hear its name, spell it, and play!</p>
 
-    <div class="display-box" id="word-display">Tap Anything!</div>
+  <div class="stars" id="stars">⭐ Stars: 0</div>
+  <div class="display-box" id="word-display">Tap Anything!</div>
 
-    <div class="grid">
-        <div class="card" onclick="speak('Lion', '🦁 Roar!')">
-            <span class="emoji">🦁</span>
-            <span class="label">Lion</span>
-        </div>
-        <div class="card" onclick="speak('Elephant', '🐘 Trumpet!')">
-            <span class="emoji">🐘</span>
-            <span class="label">Elephant</span>
-        </div>
-        <div class="card" onclick="speak('Monkey', '🐒 Ooh ooh aah aah!')">
-            <span class="emoji">🐒</span>
-            <span class="label">Monkey</span>
-        </div>
-        <div class="card" onclick="speak('Frog', '🐸 Ribbit!')">
-            <span class="emoji">🐸</span>
-            <span class="label">Frog</span>
-        </div>
-        <div class="card" onclick="speak('Cat', '🐱 Meow!')">
-            <span class="emoji">🐱</span>
-            <span class="label">Cat</span>
-        </div>
-        <div class="card" onclick="speak('Dog', '🐶 Woof Woof!')">
-            <span class="emoji">🐶</span>
-            <span class="label">Dog</span>
-        </div>
-        <div class="card" onclick="speak('Duck', '🦆 Quack!')">
-            <span class="emoji">🦆</span>
-            <span class="label">Duck</span>
-        </div>
-        <div class="card" onclick="speak('Cow', '🐮 Moo!')">
-            <span class="emoji">🐮</span>
-            <span class="label">Cow</span>
-        </div>
+  <div class="grid" id="animal-grid">
+    <div class="card" onclick="learn('Lion','🦁 Roar!','sounds/lion.mp3')">
+      <span class="emoji">🦁</span><span class="label">Lion</span>
     </div>
+    <div class="card" onclick="learn('Elephant','🐘 Trumpet!','sounds/elephant.mp3')">
+      <span class="emoji">🐘</span><span class="label">Elephant</span>
+    </div>
+    <div class="card" onclick="learn('Monkey','🐒 Ooh ooh!','sounds/monkey.mp3')">
+      <span class="emoji">🐒</span><span class="label">Monkey</span>
+    </div>
+    <div class="card" onclick="learn('Cat','🐱 Meow!','sounds/cat.mp3')">
+      <span class="emoji">🐱</span><span class="label">Cat</span>
+    </div>
+  </div>
 
-    <script>
-        const display = document.getElementById('word-display');
+  <div class="quiz-box" id="quiz-box"></div>
 
-        function speak(word, soundEffect) {
-            // Update visual display text
-            display.textContent = `${word.toUpperCase()}!`;
+  <script>
+    const display = document.getElementById('word-display');
+    const starsBox = document.getElementById('stars');
+    const quizBox = document.getElementById('quiz-box');
+    let stars = 0;
+    let language = 'en';
 
-            // Check if browser supports speech synthesis
-            if ('speechSynthesis' in window) {
-                // Stop any current speaking before starting a new one
-                window.speechSynthesis.cancel();
+    function learn(word, soundEffect, audioFile) {
+      display.textContent = `${word.toUpperCase()}!`;
+      playSoundEffect(audioFile);
+      speakWord(word, soundEffect);
+      startQuiz(word);
+    }
 
-                // 1. Say the name of the animal clearly
-                const wordUtterance = new SpeechSynthesisUtterance(word);
-                wordUtterance.rate = 0.85; // Slightly slower for kids
-                wordUtterance.pitch = 1.2; // Higher pitch to sound friendly
+    function speakWord(word, soundEffect) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const wordUtterance = new SpeechSynthesisUtterance(word);
+        wordUtterance.rate = 0.85; wordUtterance.pitch = 1.2;
+        wordUtterance.onend = () => {
+          const spelling = word.split('').join('... ');
+          const spellingUtterance = new SpeechSynthesisUtterance(spelling);
+          spellingUtterance.rate = 0.75; spellingUtterance.pitch = 1.2;
+          spellingUtterance.onend = () => {
+            const soundUtterance = new SpeechSynthesisUtterance(soundEffect);
+            window.speechSynthesis.speak(soundUtterance);
+          };
+          window.speechSynthesis.speak(spellingUtterance);
+        };
+        window.speechSynthesis.speak(wordUtterance);
+      }
+    }
 
-                // 2. Spell the animal out loud after saying its name
-                wordUtterance.onend = () => {
-                    const spelling = word.split('').join('... ');
-                    const spellingUtterance = new SpeechSynthesisUtterance(spelling);
-                    spellingUtterance.rate = 0.75;
-                    spellingUtterance.pitch = 1.2;
-                    
-                    window.speechSynthesis.speak(spellingUtterance);
-                };
+    function playSoundEffect(file) {
+      const audio = new Audio(file);
+      audio.play();
+    }
 
-                window.speechSynthesis.speak(wordUtterance);
-            } else {
-                alert("Your browser doesn't support text-to-speech!");
-            }
+    function startQuiz(correctWord) {
+      quizBox.innerHTML = `<p>Which animal did you hear?</p>`;
+      const options = ['Lion','Elephant','Monkey','Cat'];
+      options.forEach(opt => {
+        const btn = document.createElement('div');
+        btn.className = 'quiz-option';
+        btn.textContent = opt;
+        btn.onclick = () => checkAnswer(opt, correctWord);
+        quizBox.appendChild(btn);
+      });
+    }
+
+    function checkAnswer(selected, correct) {
+      if (selected === correct) {
+        stars++;
+        starsBox.textContent = `⭐ Stars: ${stars}`;
+        quizBox.innerHTML = `<p>🎉 Correct! You earned a star!</p>`;
+        if (stars >= 5) {
+          alert("You’re a Super Learner! 🌟");
         }
-    </script>
+      } else {
+        quizBox.innerHTML = `<p>❌ Try again!</p>`;
+      }
+    }
+  </script>
 </body>
 </html>
-
 
 
 
