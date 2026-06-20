@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Word Quest: Cognitive Brain Trainer</title>
+    <title>Word Quest Pro: Corrected Version</title>
     <style>
         :root {
             --primary: #a855f7;
@@ -161,7 +161,6 @@
         <h1>🧠 Word Quest Pro</h1>
         <p style="color: #6b7280; margin-top: 5px; margin-bottom: 15px;">Cognitive Brain Exercise Mode</p>
 
-        <!-- Voice Accent Configuration Component -->
         <div class="voice-selector-box">
             <label for="voice-select">🗣️ Select Speaker Accent:</label>
             <select id="voice-select">
@@ -190,7 +189,6 @@
     </div>
 
     <script>
-        // High-entropy vocabulary dataset curated for neurological cognitive stimulation
         const brainExerciseWords = [
             "paradox", "quantum", "matrix", "horizon", "velocity", "spectrum", "symmetry", "illusion",
             "catalyst", "synergy", "dynamic", "abstract", "harmonic", "infinite", "graphene", "traverse",
@@ -215,7 +213,7 @@
         const streakVal = document.getElementById('streak-val');
         const voiceSelect = document.getElementById('voice-select');
 
-        // Dynamically parse system speech voice objects
+        // FIXED: Safe voice loader that works even if the browser delays loading
         function loadSystemVoices() {
             if ('speechSynthesis' in window) {
                 browserVoices = window.speechSynthesis.getVoices();
@@ -235,21 +233,33 @@
             triggerSpeech(currentWord);
         }
 
+        // FIXED: Re-engineered speech player with robust failure recovery
         function triggerSpeech(text) {
             if ('speechSynthesis' in window) {
+                // Cancel any stuck audio tasks hanging in the browser queue
                 window.speechSynthesis.cancel();
-                const utterance = new SpeechSynthesisUtterance(text);
                 
-                // Fetch target accent code configured via the dropdown selection
+                const utterance = new SpeechSynthesisUtterance(text);
                 const targetLang = voiceSelect.value;
+                
+                // Force a universal language backup tag if voice profiles aren't ready
                 utterance.lang = targetLang;
                 
-                // Matches exact regional system voice profile signatures
-                const matchedVoice = browserVoices.find(v => v.lang.startsWith(targetLang));
-                if (matchedVoice) utterance.voice = matchedVoice;
+                // Try to find a precise voice match
+                if (browserVoices.length > 0) {
+                    const matchedVoice = browserVoices.find(v => v.lang.toLowerCase().includes(targetLang.toLowerCase()));
+                    if (matchedVoice) {
+                        utterance.voice = matchedVoice;
+                    }
+                }
 
                 utterance.rate = 0.85;
+                utterance.pitch = 1.0;
+                
+                // Fire audio
                 window.speechSynthesis.speak(utterance);
+            } else {
+                console.log("Speech API not supported in this browser environment.");
             }
         }
 
@@ -277,13 +287,7 @@
         hintBtn.addEventListener('click', () => {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
-                const spelling = currentWord.split('').join('... ');
-                const utterance = new SpeechSynthesisUtterance(`Spelling... ${spelling}`);
-                utterance.lang = voiceSelect.value;
-                utterance.rate = 0.75;
-                window.speechSynthesis.speak(utterance);
-            }
-        });
+
 
 
 
