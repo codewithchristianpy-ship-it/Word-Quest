@@ -3,16 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kids Interactive Learning Board</title>
+    <title>Kids Interactive Learning Board & Brain Trainer</title>
     <style>
         :root {
             --bg-color: #f0fdf4;
+            --card-bg: #ffffff;
             --title-color: #15803d;
+            --text-color: #1e3a1e;
+            --border-color: #bbf7d0;
+            --shadow-color: #dcfce7;
+            --input-border: #cbd5e1;
+        }
+
+        /* Functional Dark Mode Variable System */
+        [data-theme="dark"] {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --title-color: #4ade80;
+            --text-color: #f8fafc;
+            --border-color: #334155;
+            --shadow-color: #020617;
+            --input-border: #475569;
         }
 
         body {
             font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
             background-color: var(--bg-color);
+            color: var(--text-color);
             margin: 0;
             padding: 20px;
             display: flex;
@@ -20,22 +37,104 @@
             align-items: center;
             min-height: 100vh;
             box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Top Configuration Panel */
+        .config-bar {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+
+        .config-item {
+            flex: 1;
+            background: var(--card-bg);
+            border: 3px solid var(--border-color);
+            padding: 10px;
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            box-shadow: 0 4px 0px var(--shadow-color);
+        }
+
+        .config-item label {
+            font-size: 0.8rem;
+            font-weight: bold;
+            opacity: 0.8;
+        }
+
+        select, .btn-toggle {
+            width: 100%;
+            padding: 8px;
+            border-radius: 10px;
+            border: 2px solid var(--border-color);
+            background: var(--card-bg);
+            color: var(--text-color);
+            font-weight: bold;
+            font-family: inherit;
+            cursor: pointer;
+            outline: none;
         }
 
         h1 {
             color: var(--title-color);
             font-size: 2.5rem;
             margin-bottom: 5px;
-            text-shadow: 2px 2px 0px #bbf7d0;
+            text-shadow: 2px 2px 0px var(--border-color);
             text-align: center;
         }
 
         .subtitle {
             font-size: 1.2rem;
-            color: #166534;
+            color: var(--title-color);
+            opacity: 0.9;
             margin-top: 0;
             margin-bottom: 2rem;
             text-align: center;
+        }
+
+        /* Mode Selector Tabs */
+        .mode-tabs {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            font-family: inherit;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 15px;
+            border: 3px solid var(--border-color);
+            background: var(--card-bg);
+            color: var(--text-color);
+            cursor: pointer;
+            box-shadow: 0 4px 0px var(--shadow-color);
+        }
+
+        .tab-btn.active {
+            background: var(--title-color);
+            color: white;
+            border-color: var(--title-color);
+        }
+
+        .game-panel {
+            display: none;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .game-panel.active {
+            display: block;
         }
 
         .grid {
@@ -43,30 +142,29 @@
             grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
             gap: 20px;
             width: 100%;
-            max-width: 600px;
         }
 
         .card {
-            background: white;
-            border: 4px solid #bbf7d0;
+            background: var(--card-bg);
+            border: 4px solid var(--border-color);
             border-radius: 24px;
             padding: 20px;
             text-align: center;
             cursor: pointer;
-            box-shadow: 0 8px 0px #dcfce7;
+            box-shadow: 0 8px 0px var(--shadow-color);
             transition: all 0.1s ease;
             user-select: none;
         }
 
         .card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 12px 0px #dcfce7;
+            box-shadow: 0 12px 0px var(--shadow-color);
             border-color: #4ade80;
         }
 
         .card:active {
             transform: translateY(6px);
-            box-shadow: 0 2px 0px #dcfce7;
+            box-shadow: 0 2px 0px var(--shadow-color);
         }
 
         .emoji {
@@ -78,22 +176,21 @@
         .label {
             font-size: 1.3rem;
             font-weight: bold;
-            color: #1e3a1e;
+            color: var(--text-color);
             margin-top: 10px;
             display: block;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
-        /* Displays the spelled-out word at the top when clicked */
         .display-box {
-            background: #ffffff;
-            border: 3px dashed #4ade80;
+            background: var(--card-bg);
+            border: 3px dashed var(--title-color);
             padding: 15px 30px;
             border-radius: 50px;
             font-size: 2rem;
             font-weight: bold;
-            color: #15803d;
+            color: var(--title-color);
             margin-bottom: 2rem;
             min-height: 45px;
             display: flex;
@@ -101,85 +198,141 @@
             justify-content: center;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
+
+        /* Brain Game Styling Elements */
+        .score-container {
+            display: flex;
+            justify-content: space-around;
+            background: var(--card-bg);
+            padding: 12px;
+            border-radius: 20px;
+            border: 3px solid var(--border-color);
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            box-shadow: 0 6px 0px var(--shadow-color);
+        }
+
+        .game-box {
+            background: var(--card-bg);
+            border: 4px solid var(--border-color);
+            padding: 30px;
+            border-radius: 28px;
+            text-align: center;
+            box-shadow: 0 8px 0px var(--shadow-color);
+        }
+
+        .btn-audio {
+            background: var(--title-color);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-family: inherit;
+            font-size: 1.3rem;
+            font-weight: bold;
+            border-radius: 20px;
+            cursor: pointer;
+            box-shadow: 0 6px 0px #166534;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .btn-audio:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0px #166534;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 1.6rem;
+            text-align: center;
+            border: 3px solid var(--input-border);
+            border-radius: 18px;
+            text-transform: uppercase;
+            box-sizing: border-box;
+            outline: none;
+            background: var(--card-bg);
+            color: var(--text-color);
+            letter-spacing: 2px;
+        }
+
+        .btn-check {
+            width: 100%;
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 14px;
+            font-family: inherit;
+            font-size: 1.3rem;
+            font-weight: bold;
+            border-radius: 18px;
+            margin-top: 15px;
+            cursor: pointer;
+            box-shadow: 0 6px 0px #1d4ed8;
+        }
+
+        .btn-check:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0px #1d4ed8;
+        }
+
+        .feedback {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-top: 20px;
+            min-height: 35px;
+        }
     </style>
 </head>
 <body>
 
-    <h1>✨ Kids Learning Board ✨</h1>
-    <p class="subtitle">Tap an animal to hear its name and learn to spell!</p>
+    <!-- Confetti layer rendering container -->
+    <canvas id="confetti" style="position:fixed; top:0; left:0; width:100vw; height:100vh; pointer-events:none; z-index:999;"></canvas>
 
-    <div class="display-box" id="word-display">Tap Anything!</div>
-
-    <div class="grid">
-        <div class="card" onclick="speak('Lion', '🦁 Roar!')">
-            <span class="emoji">🦁</span>
-            <span class="label">Lion</span>
+    <!-- Top Master Configuration Bar -->
+    <div class="config-bar">
+        <div class="config-item">
+            <label for="voice-select">🗣️ ACCENT SELECTOR</label>
+            <select id="voice-select">
+                <option value="en-US">American Accent</option>
+                <option value="en-GB">British Accent</option>
+            </select>
         </div>
-        <div class="card" onclick="speak('Elephant', '🐘 Trumpet!')">
-            <span class="emoji">🐘</span>
-            <span class="label">Elephant</span>
-        </div>
-        <div class="card" onclick="speak('Monkey', '🐒 Ooh ooh aah aah!')">
-            <span class="emoji">🐒</span>
-            <span class="label">Monkey</span>
-        </div>
-        <div class="card" onclick="speak('Frog', '🐸 Ribbit!')">
-            <span class="emoji">🐸</span>
-            <span class="label">Frog</span>
-        </div>
-        <div class="card" onclick="speak('Cat', '🐱 Meow!')">
-            <span class="emoji">🐱</span>
-            <span class="label">Cat</span>
-        </div>
-        <div class="card" onclick="speak('Dog', '🐶 Woof Woof!')">
-            <span class="emoji">🐶</span>
-            <span class="label">Dog</span>
-        </div>
-        <div class="card" onclick="speak('Duck', '🦆 Quack!')">
-            <span class="emoji">🦆</span>
-            <span class="label">Duck</span>
-        </div>
-        <div class="card" onclick="speak('Cow', '🐮 Moo!')">
-            <span class="emoji">🐮</span>
-            <span class="label">Cow</span>
+        <div class="config-item">
+            <label>🌓 ENVIRONMENT</label>
+            <button class="btn-toggle" id="theme-btn">Switch Theme Mode</button>
         </div>
     </div>
 
-    <script>
-        const display = document.getElementById('word-display');
+    <h1>✨ Kids Learning Board ✨</h1>
+    <p class="subtitle">Play with soundboard shapes or practice cognitive brain challenges!</p>
 
-        function speak(word, soundEffect) {
-            // Update visual display text
-            display.textContent = `${word.toUpperCase()}!`;
+    <!-- Mode Selector Navigation Switch -->
+    <div class="mode-tabs">
+        <button class="tab-btn active" id="btn-soundboard" onclick="toggleView('soundboard')">🔊 Soundboard Mode</button>
+        <button class="tab-btn" id="btn-braingame" onclick="toggleView('game')">🧠 Brain Exercise Game</button>
+    </div>
 
-            // Check if browser supports speech synthesis
-            if ('speechSynthesis' in window) {
-                // Stop any current speaking before starting a new one
-                window.speechSynthesis.cancel();
+    <!-- PANEL 1: Classical Audio Interaction Board -->
+    <div id="panel-soundboard" class="game-panel active">
+        <div class="display-box" id="word-display">Tap Anything!</div>
+        <div class="grid">
+            <div class="card" onclick="speak('Lion')">
+                <span class="emoji">🦁</span>
+                <span class="label">Lion</span>
+            </div>
+            <div class="card" onclick="speak('Elephant')">
+                <span class="emoji">🐘</span>
+                <span class="label">Elephant</span>
+            </div>
+            <div class="card" onclick="speak('Monkey')">
+                <span class="emoji">🐒</span>
+                <span class="label">Monkey</span>
+            </div>
+            <div class="card" onclick="speak('Frog')">
+                <span class="emoji">🐸</span>
 
-                // 1. Say the name of the animal clearly
-                const wordUtterance = new SpeechSynthesisUtterance(word);
-                wordUtterance.rate = 0.85; // Slightly slower for kids
-                wordUtterance.pitch = 1.2; // Higher pitch to sound friendly
-
-                // 2. Spell the animal out loud after saying its name
-                wordUtterance.onend = () => {
-                    const spelling = word.split('').join('... ');
-                    const spellingUtterance = new SpeechSynthesisUtterance(spelling);
-                    spellingUtterance.rate = 0.75;
-                    spellingUtterance.pitch = 1.2;
-                    
-                    window.speechSynthesis.speak(spellingUtterance);
-                };
-
-                window.speechSynthesis.speak(wordUtterance);
-            } else {
-                alert("Your browser doesn't support text-to-speech!");
-            }
-        }
-    </script>
-</body>
-</html>
 
 
 
