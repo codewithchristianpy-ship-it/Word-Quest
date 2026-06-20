@@ -1,199 +1,154 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kids Interactive Learning Board</title>
-  <style>
-    :root {
-      --bg-color: #f0fdf4;
-      --title-color: #15803d;
-    }
-    body {
-      font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
-      background-color: var(--bg-color);
-      margin: 0;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-    }
-    h1 {
-      color: var(--title-color);
-      font-size: 2.5rem;
-      margin-bottom: 5px;
-      text-shadow: 2px 2px 0px #bbf7d0;
-      text-align: center;
-    }
-    .subtitle {
-      font-size: 1.2rem;
-      color: #166534;
-      margin-bottom: 2rem;
-      text-align: center;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 20px;
-      width: 100%;
-      max-width: 600px;
-    }
-    .card {
-      background: white;
-      border: 4px solid #bbf7d0;
-      border-radius: 24px;
-      padding: 20px;
-      text-align: center;
-      cursor: pointer;
-      box-shadow: 0 8px 0px #dcfce7;
-      transition: all 0.2s ease;
-      user-select: none;
-    }
-    .card:hover {
-      transform: translateY(-4px) scale(1.05);
-      box-shadow: 0 12px 0px #dcfce7;
-      border-color: #4ade80;
-    }
-    .emoji {
-      font-size: 4rem;
-      margin: 0;
-    }
-    .label {
-      font-size: 1.3rem;
-      font-weight: bold;
-      color: #1e3a1e;
-      margin-top: 10px;
-      text-transform: uppercase;
-    }
-    .display-box {
-      background: #ffffff;
-      border: 3px dashed #4ade80;
-      padding: 15px 30px;
-      border-radius: 50px;
-      font-size: 2rem;
-      font-weight: bold;
-      color: #15803d;
-      margin-bottom: 2rem;
-      min-height: 45px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .stars {
-      font-size: 2rem;
-      color: gold;
-      margin-bottom: 1rem;
-    }
-    .quiz-box {
-      margin-top: 20px;
-      text-align: center;
-    }
-    .quiz-option {
-      background: #dcfce7;
-      border: 2px solid #4ade80;
-      border-radius: 12px;
-      padding: 10px;
-      margin: 5px;
-      cursor: pointer;
-      display: inline-block;
-    }
-    .quiz-option:hover {
-      background: #bbf7d0;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Kids Learning Adventure</title>
+<style>
+  body { font-family:'Comic Sans MS',sans-serif; background:#f0fdf4; text-align:center; }
+  h1 { color:#15803d; text-shadow:2px 2px #bbf7d0; }
+  .stars { font-size:1.5rem; color:gold; margin:1rem; }
+  .display-box { background:#fff; border:3px dashed #4ade80; padding:10px; border-radius:30px; font-size:2rem; margin:1rem auto; width:60%; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:15px; max-width:600px; margin:auto; }
+  .card { background:#fff; border:4px solid #bbf7d0; border-radius:20px; padding:15px; cursor:pointer; }
+  .emoji { font-size:3rem; }
+  .quiz-box { margin-top:20px; }
+  .quiz-option { background:#dcfce7; border:2px solid #4ade80; border-radius:12px; padding:10px; margin:5px; cursor:pointer; display:inline-block; }
+  .scramble-box { margin-top:20px; }
+  .letter { display:inline-block; background:#bbf7d0; padding:10px; margin:5px; border-radius:8px; cursor:grab; }
+  .drop-zone { display:inline-block; min-width:40px; min-height:40px; border:2px dashed #4ade80; margin:5px; border-radius:8px; }
+  .level-buttons { margin:20px; }
+  .level-buttons button { margin:5px; padding:10px 20px; border:none; border-radius:12px; background:#4ade80; color:#fff; cursor:pointer; font-weight:bold; }
+  .level-buttons button:disabled { background:#ccc; cursor:not-allowed; }
+</style>
 </head>
 <body>
 
-  <h1>✨ Kids Learning Board ✨</h1>
-  <p class="subtitle">Tap an animal to hear its name, spell it, and play!</p>
+<h1>✨ Kids Learning Adventure ✨</h1>
+<div class="stars" id="stars">⭐ Stars: 0</div>
+<div class="display-box" id="word-display">Tap Anything!</div>
 
-  <div class="stars" id="stars">⭐ Stars: 0</div>
-  <div class="display-box" id="word-display">Tap Anything!</div>
+<div class="level-buttons">
+  <button onclick="loadLevel('animals')" id="btn-animals">Animals</button>
+  <button onclick="loadLevel('fruits')" id="btn-fruits" disabled>Fruits</button>
+  <button onclick="loadLevel('colors')" id="btn-colors" disabled>Colors</button>
+</div>
 
-  <div class="grid" id="animal-grid">
-    <div class="card" onclick="learn('Lion','🦁 Roar!','sounds/lion.mp3')">
-      <span class="emoji">🦁</span><span class="label">Lion</span>
-    </div>
-    <div class="card" onclick="learn('Elephant','🐘 Trumpet!','sounds/elephant.mp3')">
-      <span class="emoji">🐘</span><span class="label">Elephant</span>
-    </div>
-    <div class="card" onclick="learn('Monkey','🐒 Ooh ooh!','sounds/monkey.mp3')">
-      <span class="emoji">🐒</span><span class="label">Monkey</span>
-    </div>
-    <div class="card" onclick="learn('Cat','🐱 Meow!','sounds/cat.mp3')">
-      <span class="emoji">🐱</span><span class="label">Cat</span>
-    </div>
-  </div>
+<div class="grid" id="card-grid"></div>
+<div class="quiz-box" id="quiz-box"></div>
+<div class="scramble-box" id="scramble-box"></div>
 
-  <div class="quiz-box" id="quiz-box"></div>
+<script>
+const display=document.getElementById('word-display');
+const starsBox=document.getElementById('stars');
+const quizBox=document.getElementById('quiz-box');
+const scrambleBox=document.getElementById('scramble-box');
+const cardGrid=document.getElementById('card-grid');
+let stars=0;
+let currentLevel='animals';
 
-  <script>
-    const display = document.getElementById('word-display');
-    const starsBox = document.getElementById('stars');
-    const quizBox = document.getElementById('quiz-box');
-    let stars = 0;
-    let language = 'en';
+const levels={
+  animals:[{word:'Lion',emoji:'🦁',sound:'Roar!'},{word:'Elephant',emoji:'🐘',sound:'Trumpet!'},{word:'Monkey',emoji:'🐒',sound:'Ooh ooh!'},{word:'Cat',emoji:'🐱',sound:'Meow!'}],
+  fruits:[{word:'Apple',emoji:'🍎',sound:'Crunch!'},{word:'Banana',emoji:'🍌',sound:'Yum!'},{word:'Grapes',emoji:'🍇',sound:'Sweet!'},{word:'Orange',emoji:'🍊',sound:'Juicy!'}],
+  colors:[{word:'Red',emoji:'🟥',sound:'Red!'},{word:'Blue',emoji:'🟦',sound:'Blue!'},{word:'Green',emoji:'🟩',sound:'Green!'},{word:'Yellow',emoji:'🟨',sound:'Yellow!'}]
+};
 
-    function learn(word, soundEffect, audioFile) {
-      display.textContent = `${word.toUpperCase()}!`;
-      playSoundEffect(audioFile);
-      speakWord(word, soundEffect);
-      startQuiz(word);
-    }
+function loadLevel(level){
+  currentLevel=level;
+  cardGrid.innerHTML='';
+  levels[level].forEach(item=>{
+    const card=document.createElement('div');
+    card.className='card';
+    card.innerHTML=`<span class="emoji">${item.emoji}</span><div>${item.word}</div>`;
+    card.onclick=()=>learn(item.word,item.sound);
+    cardGrid.appendChild(card);
+  });
+  quizBox.innerHTML=''; scrambleBox.innerHTML='';
+}
 
-    function speakWord(word, soundEffect) {
-      if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-        const wordUtterance = new SpeechSynthesisUtterance(word);
-        wordUtterance.rate = 0.85; wordUtterance.pitch = 1.2;
-        wordUtterance.onend = () => {
-          const spelling = word.split('').join('... ');
-          const spellingUtterance = new SpeechSynthesisUtterance(spelling);
-          spellingUtterance.rate = 0.75; spellingUtterance.pitch = 1.2;
-          spellingUtterance.onend = () => {
-            const soundUtterance = new SpeechSynthesisUtterance(soundEffect);
-            window.speechSynthesis.speak(soundUtterance);
-          };
-          window.speechSynthesis.speak(spellingUtterance);
-        };
-        window.speechSynthesis.speak(wordUtterance);
-      }
-    }
+function learn(word,sound){
+  display.textContent=word.toUpperCase();
+  speakWord(word,sound);
+  startQuiz(word);
+  startScramble(word);
+}
 
-    function playSoundEffect(file) {
-      const audio = new Audio(file);
-      audio.play();
-    }
+function speakWord(word,sound){
+  if('speechSynthesis' in window){
+    window.speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(word);
+    u.rate=0.85; u.pitch=1.2;
+    u.onend=()=>{
+      const spelling=word.split('').join('... ');
+      const s=new SpeechSynthesisUtterance(spelling);
+      s.rate=0.75; s.pitch=1.2;
+      s.onend=()=>window.speechSynthesis.speak(new SpeechSynthesisUtterance(sound));
+      window.speechSynthesis.speak(s);
+    };
+    window.speechSynthesis.speak(u);
+  }
+}
 
-    function startQuiz(correctWord) {
-      quizBox.innerHTML = `<p>Which animal did you hear?</p>`;
-      const options = ['Lion','Elephant','Monkey','Cat'];
-      options.forEach(opt => {
-        const btn = document.createElement('div');
-        btn.className = 'quiz-option';
-        btn.textContent = opt;
-        btn.onclick = () => checkAnswer(opt, correctWord);
-        quizBox.appendChild(btn);
-      });
-    }
+function startQuiz(correct){
+  quizBox.innerHTML=`<p>Which ${currentLevel.slice(0,-1)} did you hear?</p>`;
+  levels[currentLevel].forEach(opt=>{
+    const btn=document.createElement('div');
+    btn.className='quiz-option';
+    btn.textContent=opt.word;
+    btn.onclick=()=>checkAnswer(opt.word,correct);
+    quizBox.appendChild(btn);
+  });
+}
 
-    function checkAnswer(selected, correct) {
-      if (selected === correct) {
-        stars++;
-        starsBox.textContent = `⭐ Stars: ${stars}`;
-        quizBox.innerHTML = `<p>🎉 Correct! You earned a star!</p>`;
-        if (stars >= 5) {
-          alert("You’re a Super Learner! 🌟");
-        }
-      } else {
-        quizBox.innerHTML = `<p>❌ Try again!</p>`;
-      }
-    }
-  </script>
+function checkAnswer(selected,correct){
+  if(selected===correct){
+    stars++; starsBox.textContent=`⭐ Stars: ${stars}`;
+    quizBox.innerHTML='<p>🎉 Correct!</p>';
+    if(stars>=5) document.getElementById('btn-fruits').disabled=false;
+    if(stars>=10) document.getElementById('btn-colors').disabled=false;
+  } else quizBox.innerHTML='<p>❌ Try again!</p>';
+}
+
+function startScramble(word){
+  scrambleBox.innerHTML='<p>Arrange the letters in order:</p>';
+  const letters=word.split('');
+  const scrambled=[...letters].sort(()=>Math.random()-0.5);
+  scrambled.forEach(l=>{
+    const span=document.createElement('span');
+    span.className='letter';
+    span.textContent=l;
+    span.draggable=true;
+    span.ondragstart=e=>e.dataTransfer.setData('text',l);
+    scrambleBox.appendChild(span);
+  });
+  scrambleBox.appendChild(document.createElement('br'));
+  letters.forEach(()=> {
+    const dz=document.createElement('span');
+    dz.className='drop-zone';
+    dz.ondragover=e=>e.preventDefault();
+    dz.ondrop=e=>{
+      dz.textContent=e.dataTransfer.getData('text');
+      checkSpelling(word);
+    };
+    scrambleBox.appendChild(dz);
+  });
+}
+
+function checkSpelling(word){
+  const zones=[...scrambleBox.querySelectorAll('.drop-zone')];
+  const attempt=zones.map(z=>z.textContent).join('');
+  if(attempt===word){
+    stars++; starsBox.textContent=`⭐ Stars: ${stars}`;
+    scrambleBox.innerHTML=`<p>🎉 You spelled ${word} correctly!</p>`;
+    if(stars>=5) document.getElementById('btn-fruits').disabled=false;
+    if(stars>=10) document.getElementById('btn-colors').disabled=false;
+  }
+}
+
+// Load first level
+loadLevel('animals');
+</script>
 </body>
 </html>
-
 
 
 
