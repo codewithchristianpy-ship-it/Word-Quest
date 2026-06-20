@@ -3,32 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kids Mind Gym & Learning Quest</title>
+    <title>Kids Interactive Learning Board</title>
     <style>
         :root {
-            --bg: #f0fdf4;
-            --card-bg: #ffffff;
-            --text: #1e293b;
-            --border: #cbd5e1;
-            --primary: #a855f7;
-            --primary-dark: #6b21a8;
-            --shadow: rgba(107, 33, 168, 0.06);
-        }
-
-        [data-theme="dark"] {
-            --bg: #0f172a;
-            --card-bg: #1e293b;
-            --text: #f8fafc;
-            --border: #334155;
-            --primary: #c084fc;
-            --primary-dark: #a855f7;
-            --shadow: rgba(0, 0, 0, 0.3);
+            --bg-color: #f0fdf4;
+            --title-color: #15803d;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
+            font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+            background-color: var(--bg-color);
             margin: 0;
             padding: 20px;
             display: flex;
@@ -36,281 +20,167 @@
             align-items: center;
             min-height: 100vh;
             box-sizing: border-box;
-            transition: background-color 0.3s, color 0.3s;
         }
 
-        .header-controls {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            max-width: 500px;
-            margin-bottom: 20px;
-            gap: 10px;
-        }
-
-        .control-item {
-            flex: 1;
-            background: var(--card-bg);
-            border: 2px solid var(--border);
-            padding: 10px;
-            border-radius: 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        label {
-            font-size: 0.8rem;
-            font-weight: bold;
-            color: var(--text);
-            opacity: 0.8;
-        }
-
-        select, .btn-toggle {
-            width: 100%;
-            padding: 8px;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            background: var(--card-bg);
-            color: var(--text);
-            font-weight: bold;
-            cursor: pointer;
-            outline: none;
-        }
-
-        .btn-toggle {
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .main-card {
-            background: var(--card-bg);
-            border: 3px solid var(--border);
-            border-radius: 24px;
-            padding: 25px;
-            width: 100%;
-            max-width: 500px;
+        h1 {
+            color: var(--title-color);
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 0px #bbf7d0;
             text-align: center;
-            box-shadow: 0 10px 20px var(--shadow);
-            box-sizing: border-box;
         }
 
-        .tabs {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 20px;
+        .subtitle {
+            font-size: 1.2rem;
+            color: #166534;
+            margin-top: 0;
+            margin-bottom: 2rem;
+            text-align: center;
         }
 
-        .tab-btn {
-            flex: 1;
-            padding: 10px;
-            border-radius: 10px;
-            border: none;
-            background: #e2e8f0;
-            color: #475569;
-            font-weight: bold;
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .card {
+            background: white;
+            border: 4px solid #bbf7d0;
+            border-radius: 24px;
+            padding: 20px;
+            text-align: center;
             cursor: pointer;
+            box-shadow: 0 8px 0px #dcfce7;
+            transition: all 0.1s ease;
+            user-select: none;
         }
 
-        .tab-btn.active {
-            background: var(--primary);
-            color: white;
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 0px #dcfce7;
+            border-color: #4ade80;
         }
 
-        .panel {
-            display: none;
+        .card:active {
+            transform: translateY(6px);
+            box-shadow: 0 2px 0px #dcfce7;
         }
 
-        .panel.active {
+        .emoji {
+            font-size: 4rem;
+            margin: 0;
             display: block;
         }
 
-        /* Brain Exercise Styles */
-        .score-board {
-            display: flex;
-            justify-content: space-around;
-            background: var(--bg);
-            padding: 8px;
-            border-radius: 12px;
-            margin-bottom: 15px;
-            font-weight: bold;
-        }
-
-        .audio-box {
-            background: var(--bg);
-            border: 2px dashed var(--primary);
-            padding: 15px;
-            border-radius: 16px;
-            margin-bottom: 15px;
-        }
-
-        .btn-main {
-            width: 100%;
-            padding: 12px;
-            border-radius: 12px;
-            border: none;
-            background: var(--primary);
-            color: white;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 0 var(--primary-dark);
-        }
-
-        .btn-main:active {
-            transform: translateY(4px);
-            box-shadow: none;
-        }
-
-        .btn-sub {
-            background: #cbd5e1;
-            color: #334155;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 8px;
-            margin-top: 8px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 12px;
+        .label {
             font-size: 1.3rem;
-            text-align: center;
-            border: 2px solid var(--border);
-            border-radius: 12px;
-            background: var(--card-bg);
-            color: var(--text);
+            font-weight: bold;
+            color: #1e3a1e;
+            margin-top: 10px;
+            display: block;
             text-transform: uppercase;
-            box-sizing: border-box;
-            outline: none;
+            letter-spacing: 1px;
         }
 
-        /* Song & Rhythm Area */
-        .song-grid {
+        /* Displays the spelled-out word at the top when clicked */
+        .display-box {
+            background: #ffffff;
+            border: 3px dashed #4ade80;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #15803d;
+            margin-bottom: 2rem;
+            min-height: 45px;
             display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .song-card {
-            background: var(--bg);
-            border: 2px solid var(--border);
-            padding: 15px;
-            border-radius: 16px;
-            display: flex;
-            justify-content: space-between;
             align-items: center;
-        }
-
-        .song-title {
-            font-weight: bold;
-            text-align: left;
-        }
-
-        .btn-play {
-            background: #10b981;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .feedback {
-            font-size: 1.2rem;
-            font-weight: bold;
-            margin-top: 15px;
-            min-height: 25px;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
     </style>
 </head>
 <body>
 
-    <canvas id="confetti" style="position:fixed; top:0; left:0; width:100vw; height:100vh; pointer-events:none; z-index:999;"></canvas>
+    <h1>✨ Kids Learning Board ✨</h1>
+    <p class="subtitle">Tap an animal to hear its name and learn to spell!</p>
 
-    <!-- Top Master Control Grid -->
-    <div class="header-controls">
-        <div class="control-item">
-            <label for="voice-select">🗣️ ACCENT SWITCH</label>
-            <select id="voice-select">
-                <option value="en-US">American English</option>
-                <option value="en-GB">British English</option>
-            </select>
-        </div>
-        <div class="control-item">
-            <label>🌓 THEME SWITCH</label>
-            <button class="btn-toggle" id="theme-btn">Toggle Dark Mode</button>
-        </div>
-    </div>
+    <div class="display-box" id="word-display">Tap Anything!</div>
 
-    <!-- Main Dynamic Application Container -->
-    <div class="main-card">
-        <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('game-tab')">🧠 Brain Trainer</button>
-            <button class="tab-btn" onclick="switchTab('rhythm-tab')">🎵 Nursery Rhythm</button>
+    <div class="grid">
+        <div class="card" onclick="speak('Lion', '🦁 Roar!')">
+            <span class="emoji">🦁</span>
+            <span class="label">Lion</span>
         </div>
-
-        <!-- PANEL 1: Cognitive Word Quest Core Game -->
-        <div id="game-tab" class="panel active">
-            <h2 style="margin-top:0;">Word Quest Gym</h2>
-            <div class="score-board">
-                <span style="color:#2563eb;">⭐ Score: <span id="score-val">0</span></span>
-                <span style="color:#ea580c;">🔥 Streak: <span id="streak-val">0</span></span>
-            </div>
-            <div class="audio-box">
-                <button class="btn-main" id="listen-btn">🔊 Listen To Word</button>
-                <button class="btn-sub" id="hint-btn">Help me spell</button>
-            </div>
-            <div class="input-zone">
-                <input type="text" id="user-input" placeholder="Type answer here..." autocomplete="off">
-                <button class="btn-main" id="check-btn" style="margin-top:12px; background:#2563eb; box-shadow: 0 4px 0 #1d4ed8;">Verify Word</button>
-            </div>
-            <div class="feedback" id="feedback-msg"></div>
+        <div class="card" onclick="speak('Elephant', '🐘 Trumpet!')">
+            <span class="emoji">🐘</span>
+            <span class="label">Elephant</span>
         </div>
-
-        <!-- PANEL 2: Interactive Rhythm and Media Area -->
-        <div id="rhythm-tab" class="panel">
-            <h2 style="margin-top:0;">Primary School rhythms</h2>
-            <div class="song-grid">
-                <div class="song-card">
-                    <div class="song-title">🔤 The Alphabet Song<br><span style="font-size:0.8rem; opacity:0.7;">Learn your A-B-C letters</span></div>
-                    <button class="btn-play" onclick="playRhythm('alphabet')">▶ Play</button>
-                </div>
-                <div class="song-card">
-                    <div class="song-title">🔢 The Number Counter Rhythm<br><span style="font-size:0.8rem; opacity:0.7;">Counting from 1 to 10</span></div>
-                    <button class="btn-play" onclick="playRhythm('numbers')">▶ Play</button>
-                </div>
-            </div>
+        <div class="card" onclick="speak('Monkey', '🐒 Ooh ooh aah aah!')">
+            <span class="emoji">🐒</span>
+            <span class="label">Monkey</span>
+        </div>
+        <div class="card" onclick="speak('Frog', '🐸 Ribbit!')">
+            <span class="emoji">🐸</span>
+            <span class="label">Frog</span>
+        </div>
+        <div class="card" onclick="speak('Cat', '🐱 Meow!')">
+            <span class="emoji">🐱</span>
+            <span class="label">Cat</span>
+        </div>
+        <div class="card" onclick="speak('Dog', '🐶 Woof Woof!')">
+            <span class="emoji">🐶</span>
+            <span class="label">Dog</span>
+        </div>
+        <div class="card" onclick="speak('Duck', '🦆 Quack!')">
+            <span class="emoji">🦆</span>
+            <span class="label">Duck</span>
+        </div>
+        <div class="card" onclick="speak('Cow', '🐮 Moo!')">
+            <span class="emoji">🐮</span>
+            <span class="label">Cow</span>
         </div>
     </div>
 
     <script>
-        // 1,000+ Algorithmic Dataset Generation Engine
-        const vocabularyWords = [
-            "cat", "dog", "sun", "moon", "star", "tree", "book", "desk", "frog", "duck",
-            "lion", "bear", "fish", "bird", "apple", "grape", "melon", "peach", "plum", "mango",
-            "jump", "walk", "skip", "swim", "fly", "climb", "slide", "swing", "happy", "smile",
-            "quantum", "matrix", "horizon", "velocity", "spectrum", "symmetry", "illusion", "catalyst",
-            "synergy", "dynamic", "abstract", "harmonic", "infinite", "graphene", "traverse", "acoustic",
-            "kinetic", "resonance", "alchemy", "vortex", "nebula", "protocol", "cerebral", "monolith"
-        ];
-        const wordPool = [];
-        for (let i = 0; i < 25; i++) { vocabularyWords.forEach(w => wordPool.push(w)); } // Generates 1,350 items
+        const display = document.getElementById('word-display');
 
-        let currentWord = "";
-        let score = 0;
-        let streak = 0;
-        let systemVoices = [];
+        function speak(word, soundEffect) {
+            // Update visual display text
+            display.textContent = `${word.toUpperCase()}!`;
 
-        const themeBtn = document.getElementById('theme-btn');
-        const voiceSelect = document.getElementById('voice-select');
-        const listenBtn = document.getElementById('listen-btn');
-        const hintBtn = document.getElementById('hint-btn');const checkBtn = document.getElementById('check-btn');const userInput = document.getElementById('user-input');const feedbackMsg = document.getElementById('feedback-msg');// Dark/Light Theme Switching LogicthemeBtn.addEventListener('click', () => {const currentTheme = document.documentElement.getAttribute('data-theme');const targetTheme = currentTheme === 'dark' ? 'light' : 'dark';document.documentElement.setAttribute('data-theme', targetTheme);});// Tab Navigation Routerfunction switchTab(tabId) {document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));document.getElementById(tabId).classList.add('active');event.target.classList.add('active');window.speechSynthesis.cancel();}// Robust Voice Syncfunction cacheVoices() {if ('speechSynthesis' in window) systemVoices = window.speechSynthesis.getVoices();}cacheVoices();if (window.speechSynthesis && window.speechSynthesis.onvoiceschanged !== undefined) {window.speechSynthesis.onvoiceschanged = cacheVoices;}function nextWord() {currentWord = wordPool[Math.floor(Math.random() * wordPool.length)];userInput.value = "";feedbackMsg.textContent = "";speakWord(currentWord);}function speakWord(text, slowMode = false) {if ('speechSynthesis' in window) {window.speechSynthesis.cancel();const utterance = new SpeechSynthesisUtterance(text);const targetLang = voiceSelect.value;utterance.lang = targetLang;if (systemVoices.length > 0) {const match = systemVoices.find(v => v.lang.toLowerCase().includes(targetLang.toLowerCase()));if (match) utterance.voice = match;}utterance.rate = slowMode ? 0.65 : 0.85;window.speechSynthesis.speak(utterance);}}// Digital Phonics Engine for Rhythmsfunction playRhythm(type) {window.speechSynthesis.cancel();let lyrics = "";if (type === 'alphabet') {lyrics = "A B C D E F G... H I J K L M N O P... Q R S... T U V... W X... Y and Z. Now I know my A B C's, next time won't you sing with me!";} else if (type === 'numbers') {lyrics = "One, two, buckle my shoe. Three, four, knock at the door. Five, six, pick up sticks. Seven, eight, lay them straight. Nine, ten, a big fat hen!";}speakWord(lyrics, true);}function verifyMatch() {const guess = userInput.value.trim().toLowerCase();if (!guess) return;if (guess === currentWord.toLowerCase()) {score += 20; streak += 1;document.getElementById('score-val').textContent = score;document.getElementById('streak-val').textContent = streak;feedbackMsg.textContent = "🎯 Correct! Brilliant Job!";feedbackMsg.style.color = "#16a34a";explodeParticles();speakWord("Excellent");setTimeout(nextWord, 1800);} else {streak = 0;document.getElementById('streak-val').textContent = streak;feedbackMsg.textContent = "❌ Not quite! Let's try again.";feedbackMsg.style.color = "#dc2626";speakWord("Try again");}}listenBtn.addEventListener('click', () => speakWord(currentWord));hintBtn.addEventListener('click', () => {const spelling = currentWord.split('').join('... ');speakWord(It is spelled... ${spelling});});checkBtn.addEventListener('click', verifyMatch);userInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') verifyMatch(); });// CANVAS PARTICLE ENGINEconst canvas = document.getElementById('confetti');const ctx = canvas.getContext('2d');let dots = [];function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }window.addEventListener('resize', resize); resize();function explodeParticles() {dots = [];for (let i = 0; i < 60; i++) {dots.push({x: canvas.width / 2, y: canvas.height / 2,color: hsl(${Math.random() * 360}, 100%, 50%),radius: Math.random() * 5 + 3,vx: (Math.random() - 0.5) * 12, vy: (Math.random() - 0.7) * 12, alpha: 1});}renderLoop();}function renderLoop() {if (dots.length === 0) return;ctx.clearRect(0, 0, canvas.width, canvas.height);dots.forEach((d, idx) => {d.x += d.vx; d.y += d.vy; d.vy += 0.2; d.alpha -= 0.02;ctx.save(); ctx.globalAlpha = d.alpha; ctx.fillStyle = d.color;ctx.beginPath(); ctx.arc(d.x, d.y, d.radius, 0, Math.PI * 2);ctx.fill(); ctx.restore();if (d.alpha <= 0) dots.splice(idx, 1);});if (dots.length > 0) requestAnimationFrame(renderLoop);}window.addEventListener('DOMContentLoaded', () => { setTimeout(nextWord, 1000); });
+            // Check if browser supports speech synthesis
+            if ('speechSynthesis' in window) {
+                // Stop any current speaking before starting a new one
+                window.speechSynthesis.cancel();
+
+                // 1. Say the name of the animal clearly
+                const wordUtterance = new SpeechSynthesisUtterance(word);
+                wordUtterance.rate = 0.85; // Slightly slower for kids
+                wordUtterance.pitch = 1.2; // Higher pitch to sound friendly
+
+                // 2. Spell the animal out loud after saying its name
+                wordUtterance.onend = () => {
+                    const spelling = word.split('').join('... ');
+                    const spellingUtterance = new SpeechSynthesisUtterance(spelling);
+                    spellingUtterance.rate = 0.75;
+                    spellingUtterance.pitch = 1.2;
+                    
+                    window.speechSynthesis.speak(spellingUtterance);
+                };
+
+                window.speechSynthesis.speak(wordUtterance);
+            } else {
+                alert("Your browser doesn't support text-to-speech!");
+            }
+        }
+    </script>
+</body>
+</html>
+
 
 
 
